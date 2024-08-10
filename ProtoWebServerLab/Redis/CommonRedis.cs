@@ -215,11 +215,11 @@ namespace ProtoWebServerLab.Redis
 
     public abstract class BaseClusterRedisCache 
     {
-        protected readonly MultiRedisConfig Config;     
+        protected readonly ClusterRedisConfig Config;     
         private readonly NewtonsoftSerializer m_serializer = new NewtonsoftSerializer();
         protected Dictionary<int, ConnectionMultiplexer> list_redis { get; private set; } = new Dictionary<int, ConnectionMultiplexer>();
 
-        public BaseClusterRedisCache(ILogger<BaseClusterRedisCache> logger, MultiRedisConfig config)
+        public BaseClusterRedisCache(ILogger<BaseClusterRedisCache> logger, ClusterRedisConfig config)
         {
             try
             {
@@ -461,15 +461,17 @@ namespace ProtoWebServerLab.Redis
         public RedisChache(ILogger<BaseRedisCache> logger)
         {
             // service에 대한 DI를 singleton으로 진행하여 등록하기 때문에 ClusterRedis를 상속한 객체는 프로그램 생명주기에서 계속 재활용되어 사용된다
-            var config = ConfigLoader.LoadJson<RedisConfig>("config_etc", ConfigLoader.eFileExtensionType.json);
+            var config = ConfigLoader.LoadJson<ConfigEtc>("config_etc", ConfigLoader.eFileExtensionType.json);
             if (null == config)
             {
                 logger.LogError($"Error in RedisChache() - RedisConfig Created Fail");
                 return;
             }
 
-            LoginRedisCache = new LoginRedisCache(logger, config);
-            LobbyRedisCache = new LobbyRedisCache(logger, config);
+            var redis = config.list_redis.Find(e => e.name.ToLower() == "redis");
+
+            LoginRedisCache = new LoginRedisCache(logger, redis?.list.Find(e => e.name.ToLower() == "login"));
+            LobbyRedisCache = new LobbyRedisCache(logger, redis?.list.Find(e => e.name.ToLower() == "lobby"));
         }
     }
 
@@ -481,15 +483,17 @@ namespace ProtoWebServerLab.Redis
         public ClusterRedisCache(ILogger<BaseClusterRedisCache> logger)
         {
             // service에 대한 DI를 singleton으로 진행하여 등록하기 때문에 ClusterRedis를 상속한 객체는 프로그램 생명주기에서 계속 재활용되어 사용된다
-            var config = ConfigLoader.LoadJson<MultiRedisConfig>("config_etc", ConfigLoader.eFileExtensionType.json);
+            var config = ConfigLoader.LoadJson<ConfigEtc>("config_etc", ConfigLoader.eFileExtensionType.json);
             if (null == config)
             {
                 logger.LogError($"Error in ClusterRedisCache() - RedisConfig Created Fail");
                 return;
             }
 
-            LoginClusterRedisCache = new LoginClusterRedisCache(logger, config);
-            LobbyClusterRedisCache = new LobbyClusterRedisCache(logger, config);
+            var list_cluster_redis = config.list_cluster_redis.Find(e => e.name.ToLower() == "cluster_redis");
+
+            LoginClusterRedisCache = new LoginClusterRedisCache(logger, list_cluster_redis?.list.Find(e => e.name.ToLower() == "login"));
+            LobbyClusterRedisCache = new LobbyClusterRedisCache(logger, list_cluster_redis?.list.Find(e => e.name.ToLower() == "lobby"));
         }
     }
     #endregion

@@ -26,7 +26,7 @@
         }
     }
 
-    public class MultiRedisConfig
+    public class ClusterRedisConfig
     {
         public readonly string name;
         public readonly List<Address> list_address;
@@ -37,9 +37,9 @@
         public readonly int reconnect_timeout_sec;
         public readonly int sync_timeout_sec;
 
-        public MultiRedisConfig(string name, List<Address> list_address, string password, bool ssl,
-                               int keep_alive_sec, int connect_timeout_sec, int reconnect_timeout_sec,
-                               int sync_timeout_sec)
+        public ClusterRedisConfig(string name, List<Address> list_address, string password, bool ssl,
+                                  int keep_alive_sec, int connect_timeout_sec, int reconnect_timeout_sec,
+                                  int sync_timeout_sec)
         {
             this.name = name;
             this.list_address = list_address;

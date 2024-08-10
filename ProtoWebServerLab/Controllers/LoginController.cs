@@ -16,12 +16,19 @@ namespace ProtoWebServerLab.Controllers
             ClusterRedis = redis;
         }
 
-        [HttpPost("{access_token}")]
-        public async Task LoginAsync(long access_token)
+        [HttpGet]
+        public async Task LoginAsyncTest()
         {
-            await ClusterRedis.LoginClusterRedisCache.SetHashDataAsync();
+            await Task.Delay(1000);
+            await Console.Out.WriteLineAsync($"LoginAsyncTest Method Callled!!!");
+        }
 
-            await Console.Out.WriteLineAsync($"LoginAsync Func Called");
+        [HttpPost("{access_token}")]
+        public async Task LoginAsync([FromBody] long access_token)
+        {
+            //await ClusterRedis.LoginClusterRedisCache.SetHashDataAsync();
+
+            await Console.Out.WriteLineAsync($"LoginAsync Func Called - data = {access_token}");
             await Task.Delay(100);
         }
     }

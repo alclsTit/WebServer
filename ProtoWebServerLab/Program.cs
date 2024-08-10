@@ -3,9 +3,9 @@ using ProtoWebServerLab.Module;
 using Serilog;
 
 {
-    var worker = new ServiceWorker(args);
-    if (false == worker.Initialize())
+    var module = new ServiceModule(args);
+    if (false == module.Initialize())
         return;
 
-    await worker.StartAsync("http://0.0.0.0:8080");
+    await module.StartAsync("http://localhost:5273");
 }

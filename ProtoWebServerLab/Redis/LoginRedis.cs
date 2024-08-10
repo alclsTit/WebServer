@@ -12,7 +12,7 @@ namespace ProtoWebServerLab.Redis
 
     public class LoginClusterRedisCache : BaseClusterRedisCache
     {
-        public LoginClusterRedisCache(ILogger<BaseClusterRedisCache> logger, MultiRedisConfig config)
+        public LoginClusterRedisCache(ILogger<BaseClusterRedisCache> logger, ClusterRedisConfig config)
             : base(logger, config)
         {
         }
